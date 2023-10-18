@@ -8,8 +8,8 @@ This is the file for testing
 """
 
 def main():
-    lst = []
-    lst[1] = 1
+    line = "Archie;Archie Architect;050 987654;archie@tuni.fi"
+    lst = line.split(";")
     print(lst)
 
 if __name__ == "__main__":
