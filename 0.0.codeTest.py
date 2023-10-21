@@ -10,10 +10,13 @@ This is the file for testing
 def main():
     d = {"a":1, "b":2, "c":4}
     print(d)
-
+    dval = d.values()
     print(d.values())
 
     print(type(d.values()))
+
+    for i in dval:
+        print(i)
 
 if __name__ == "__main__":
     main()

@@ -12,6 +12,10 @@ class Player:
     """
 
     def __init__(self, player_name):
+        """
+        Initialize a player.
+        :param player_name: string, the name of the player
+        """
         self.__name = player_name
         self.__score = 0
         self.__cumulative_score = 0
