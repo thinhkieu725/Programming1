@@ -8,9 +8,12 @@ This is the file for testing
 """
 
 def main():
-    line = "Archie;Archie Architect;050 987654;archie@tuni.fi"
-    lst = line.split(";")
-    print(lst)
+    d = {"a":1, "b":2, "c":4}
+    print(d)
+
+    print(d.values())
+
+    print(type(d.values()))
 
 if __name__ == "__main__":
     main()
