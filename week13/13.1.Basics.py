@@ -5,6 +5,7 @@ Creator: Thinh Kieu
 Student id number: 152167613
 
 This program is to note down fundamental implementations of a graphic user interface (GUI).
+About Label() and Button() components a geometry manager: pack() method.
 """
 
 from tkinter import *

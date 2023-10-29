@@ -5,6 +5,7 @@ Creator: Thinh Kieu
 Student id number: 152167613
 
 This program is to note down more advanced implementations of a graphic user interface (GUI).
+About a geometry manager: grid() method.
 """
 
 from tkinter import *
