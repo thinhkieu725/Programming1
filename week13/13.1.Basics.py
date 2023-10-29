@@ -18,15 +18,24 @@ class GUI:
         self.__main_window = Tk()  # Creating a main/root window which is an object of class Tk.
 
         # Create an object of class Label to form a text field
-        self.__text_field = Label(self.__main_window, text="Hello World!", background="green", foreground="red", padx=30, pady=10, relief=RAISED, borderwidth=5)
+        self.__text_field = Label(self.__main_window, text="Hello World!", background="green", foreground="red",
+                                  padx=30, pady=10, relief=RAISED, borderwidth=5)
         # Using a geometry manager to position the label inside the window.
         # :param side: specify which edge of the window the label is located at.
         self.__text_field.pack(expand=TRUE, fill=BOTH)
 
         # Modifying the Components' Parameters after being created
-        self.__text_field.configure(text="Yep!", background="blue", foreground="yellow", padx=80, pady=5, relief=FLAT, borderwidth=1)
+        self.__text_field.configure(text="Yep!", background="blue", foreground="yellow", padx=80, pady=5,
+                                    relief=FLAT, borderwidth=1)
+
+        # Create an object of class Button to form a Button
+        self.__quit_button = Button(self.__main_window, text="Quit", command=self.quit)
+        self.__quit_button.pack()
 
         self.__main_window.mainloop()  # Run the event loop. This function only returns when the GUI is closed.
+
+    def quit(self):
+        self.__main_window.destroy()
 
 
 def main():
