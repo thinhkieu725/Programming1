@@ -22,7 +22,7 @@ class Counter:
 
         self.__current_value = 0
         self.__current_value_label = Label(self.__main_window, text=f"{self.__current_value}")
-        self.__current_value_label.grid(row=0, column=0, rowspan=4)
+        self.__current_value_label.grid(row=0, column=0, columnspan=4)
 
         self.__reset_button = Button(self.__main_window, text="Reset", command=self.reset)
         self.__reset_button.grid(row=1, column=0)
