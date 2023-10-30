@@ -7,6 +7,7 @@ Student number: 152167613
 The program reads inputs for temperatures of days and gives back the analysis based on mean and median values.
 """
 
+
 def input_temperatures(numberOfDays):
     """
     read the inputs for temperatures from the user
@@ -15,10 +16,11 @@ def input_temperatures(numberOfDays):
     """
     temperatures = []
     for i in range(numberOfDays):
-        temp = input (f"Enter day {i+1}. temperature in Celcius: ")
+        temp = input(f"Enter day {i + 1}. temperature in Celcius: ")
         temperatures.append(float(temp))
 
     return temperatures
+
 
 def mean(listOfNumbers):
     """
@@ -27,6 +29,7 @@ def mean(listOfNumbers):
     return: float _ the median of the list
     """
     return sum(listOfNumbers) / len(listOfNumbers)
+
 
 def median(listOfNumbers):
     """
@@ -40,9 +43,10 @@ def median(listOfNumbers):
         print("ERROR in calculating the median value: list of numbers is empty.")
         return 0
     if l % 2 == 1:
-        return sortedNumbers[l//2]
+        return sortedNumbers[l // 2]
     else:
-        return (sortedNumbers[l//2 -1] + sortedNumbers[l//2])/2
+        return (sortedNumbers[l // 2 - 1] + sortedNumbers[l // 2]) / 2
+
 
 def print_temperatures(temperatures, day, tMean):
     """
@@ -55,7 +59,8 @@ def print_temperatures(temperatures, day, tMean):
     """
     # calculate the difference between the temperature of the dasy and the mean temperature
     difference = temperatures[day - 1] - tMean
-    print(f"Day{day:3d}.{temperatures[day-1]:6.1f}C difference to mean:{difference:6.1f}C")
+    print(f"Day{day:3d}.{temperatures[day - 1]:6.1f}C difference to mean:{difference:6.1f}C")
+
 
 def main():
     numberOfDays = input("Enter amount of days: ")
@@ -79,13 +84,14 @@ def main():
     print("Over or at median were:")
     for i in range(numberOfDays):
         if temperatures[i] >= tMedian:
-            print_temperatures(temperatures, i+1, tMean)
+            print_temperatures(temperatures, i + 1, tMean)
 
     print()
     print("Under median were:")
     for i in range(numberOfDays):
         if temperatures[i] < tMedian:
-            print_temperatures(temperatures, i+1, tMean)
+            print_temperatures(temperatures, i + 1, tMean)
+
 
 if __name__ == "__main__":
     main()

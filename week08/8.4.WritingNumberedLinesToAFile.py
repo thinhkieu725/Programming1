@@ -5,6 +5,7 @@ Creator: Thinh Kieu
 Student id number: 152167613
 """
 
+
 def main():
     filename = input("Enter the name of the file: ")
     try:
@@ -26,6 +27,7 @@ def main():
 
     print(f"File {filename} has been written.")
     saveFile.close()
+
 
 if __name__ == "__main__":
     main()

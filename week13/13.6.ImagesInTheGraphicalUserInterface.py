@@ -10,45 +10,36 @@ About Images - PhotoImage(), image=.
 
 from tkinter import *
 
-class BOMB_GUI:
-  def __init__(self):
-    self.__main_window = Tk()
 
-    self.__bang_image = PhotoImage(file="bang.gif")
-    self.__bomb_image = PhotoImage(file="bomb.gif")
-    self.__boom_image = PhotoImage(file="boom.gif")
+class BombAnimation:
+    def __init__(self):
+        self.__update_counter = 0
 
-    self.__bomb_label = Label(self.__main_window, image=self.__bomb_image)
-    self.__explode_button = Button(self.__main_window, image=self.__bang_image,
-                                   command=self.explode)
-    self.__reload_button = Button(self.__main_window, text="Reload",
-                                  command=self.reaload, state=DISABLED,
-                                  background="white")
-    self.__quit_button = Button(self.__main_window, text="Quit",
-                                command=self.quit, background="white")
+        self.__main_window = Tk()
 
-    self.__bomb_label.pack(fill=BOTH)
-    self.__explode_button.pack()
-    self.__reload_button.pack(fill=BOTH)
-    self.__quit_button.pack(fill=BOTH)
+        self.__bomb_images = []
+        for image_file in ["cherrybomb-1.gif", "cherrybomb-2.gif"]:
+            self.__bomb_images.append(PhotoImage(file=image_file))
 
-    self.__main_window.mainloop()
+        self.__bomb_button = Button(self.__main_window, command=self.quit)
+        self.__bomb_button.pack()
 
-  def explode(self):
-    self.__bomb_label.configure(image=self.__boom_image)
-    self.__explode_button.configure(state=DISABLED)
-    self.__reload_button.configure(state=NORMAL)
+        self.update_image()
 
-  def reaload(self):
-    self.__bomb_label.configure(image=self.__bomb_image)
-    self.__explode_button.configure(state=NORMAL)
-    self.__reload_button.configure(state=DISABLED)
+        self.__main_window.mainloop()
 
-  def quit(self):
-    self.__main_window.destroy()
+    def quit(self):
+        self.__main_window.destroy()
+
+    def update_image(self):
+        self.__bomb_button.configure(image=self.__bomb_images[self.__update_counter % 2])
+        self.__update_counter += 1
+        self.__main_window.after(200, self.update_image)
+
 
 def main():
-  gui = BOMB_GUI()
+    gui = BombAnimation()
+
 
 if __name__ == "__main__":
-   main()
+    main()
