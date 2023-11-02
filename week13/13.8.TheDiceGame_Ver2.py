@@ -11,7 +11,7 @@ from tkinter import *
 import random
 import time
 
-# These image files have to be in the PyCharmi project folder.
+# These image files have to be in the PyCharm project folder.
 IMAGE_FILES = ["1S.gif", "2.gif", "3.gif", "4.gif", "5.gif", "6.gif"]
 
 WIN_POINTS = 50

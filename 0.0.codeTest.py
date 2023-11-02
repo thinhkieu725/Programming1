@@ -7,16 +7,17 @@ Student number: 152167613
 This is the file for testing
 """
 
-def main():
-    d = {"a":1, "b":2, "c":4}
-    print(d)
-    dval = d.values()
-    print(d.values())
+from tkinter import *
 
-    print(type(d.values()))
+root = Tk()
 
-    for i in dval:
-        print(i)
+def hello():
+    print("hello!")
 
-if __name__ == "__main__":
-    main()
+menubar = Menu(root)
+menubar.add_command(label="Hello StudyTonight!", command=hello)
+menubar.add_command(label="Quit!", command=root.quit)
+
+root.config(menu=menubar)
+
+root.mainloop()
