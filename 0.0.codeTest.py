@@ -7,41 +7,46 @@ Student number: 152167613
 This is the file for testing
 """
 
-from tkinter import *
+import tkinter as tk
 
-root = Tk()
-root.geometry("300x300")
+window = tk.Tk()
+window.title('My Window')
+window.geometry('100x100')
 
-w = Label(root, text='StudyTonight', fg="Blue", font="100")
-w.pack()
+l = tk.Label(window, bg='white', width=20, text='empty')
+l.pack()
 
-Checkbutton1 = IntVar()
-Checkbutton2 = IntVar()
-Checkbutton3 = IntVar()
 
-Button1 = Checkbutton(root, text="Homepage",
-                      variable=Checkbutton1,
-                      onvalue=1,
-                      offvalue=0,
-                      height=2,
-                      width=10)
+def print_selection():
+    if (var1.get() == 1) & (var2.get() == 0):
+        l.config(text='I love Python ')
+    elif (var1.get() == 0) & (var2.get() == 1):
+        l.config(text='I love C++')
+    elif (var1.get() == 0) & (var2.get() == 0):
+        l.config(text='I do not love anything')
+    else:
+        l.config(text='I love both')
 
-Button2 = Checkbutton(root, text="Tutorials",
-                      variable=Checkbutton2,
-                      onvalue=1,
-                      offvalue=0,
-                      height=2,
-                      width=10)
 
-Button3 = Checkbutton(root, text="Contactus",
-                      variable=Checkbutton3,
-                      onvalue=1,
-                      offvalue=0,
-                      height=2,
-                      width=10)
+def print_message():
+    if var1.get() == 1:
+        label.configure(text="OMG")
+        print(1)
+    else:
+        label.configure(text="Oh no")
 
-Button1.pack()
-Button2.pack()
-Button3.pack()
 
-mainloop()
+var1 = tk.IntVar()
+var2 = tk.IntVar()
+c1 = tk.Checkbutton(window, text='Python', variable=var1, onvalue=1, offvalue=0, command=print_selection)
+c1.pack()
+c2 = tk.Checkbutton(window, text='C++', variable=var2, onvalue=1, offvalue=0, command=print_selection)
+c2.pack()
+
+b = tk.Button(window, text="print", command=print_message)
+label = tk.Label(window, text="")
+
+b.pack()
+label.pack()
+
+window.mainloop()
