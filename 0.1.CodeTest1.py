@@ -1,6 +1,6 @@
 """
 COMP.CS.100 Programming 1
-0.0.codeTest.py
+0.1.CodeTest1.py
 Creator: Thinh Kieu
 Student number: 152167613
 

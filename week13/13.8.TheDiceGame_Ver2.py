@@ -51,7 +51,7 @@ class Dicegame:
 
         Button(self.__window, text="new game", command=self.new_game) \
             .grid(row=2, column=0, sticky=W + E)
-        Button(self.__window, text="quit", command=self.__window.destroy)\
+        Button(self.__window, text="quit", command=self.__window.destroy) \
             .grid(row=3, column=0, sticky=W + E)
 
         # ======================================================================
@@ -72,8 +72,8 @@ class Dicegame:
 
         for i in range(NR_OF_PLAYERS):
             Label(self.__window, text="Player " + str(i + 1) + " points:") \
-            .grid(row=i, column=2, sticky=E)
-        Label(self.__window, text="Accumulated points:")\
+                .grid(row=i, column=2, sticky=E)
+        Label(self.__window, text="Accumulated points:") \
             .grid(row=NR_OF_PLAYERS, column=2, sticky=E)
 
         # ======================================================================
@@ -94,7 +94,6 @@ class Dicegame:
         self.new_game()
         self.__window.mainloop()
 
-
     # Method that initiates the values of all attributes. Is called both in
     # the constructor and when the button "new game" is clicked.
     def new_game(self):
@@ -108,10 +107,9 @@ class Dicegame:
         self.update_gui_texts()
         self.__dice_label.configure(image=self.__empty_image)
 
-        #Activate the buttons that can be deactivated
+        # Activate the buttons that can be deactivated
         self.__throw_button.configure(state=NORMAL)
         self.__hand_over_button.configure(state=NORMAL)
-
 
     # Method that updates the texts in the GUI components
     def update_gui_texts(self):
@@ -119,7 +117,6 @@ class Dicegame:
             self.__point_labels[i].configure(text=self.__points[i])
         self.__accumulated_points_label.configure(text=self.__accumulated_points)
         self.__instructions_label.configure(text=self.__instructions)
-
 
     # Method tied to the button "throw"
     def throw(self):
@@ -138,12 +135,10 @@ class Dicegame:
             self.__accumulated_points += dice
         self.update_gui_texts()
 
-
     # Method tied to the button "hand over"
     def hand_over(self):
         self.__points[self.__whose_turn] += self.__accumulated_points
         self.change_turn()
-
 
     # This method is called when you have dice 1 or when the player hands over
     # the turn.
@@ -154,10 +149,9 @@ class Dicegame:
 
         self.__whose_turn = (self.__whose_turn + 1) % NR_OF_PLAYERS
         self.__instructions = "Player " + str(self.__whose_turn + 1) + \
-                                   " throw the dice or hand over the turn"
+                              " throw the dice or hand over the turn"
         self.__accumulated_points = 0
         self.update_gui_texts()
-
 
     # Method checks if the game is over and finds out and declares the winner(s).
     def is_over(self):
