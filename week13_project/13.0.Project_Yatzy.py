@@ -37,33 +37,34 @@ class Yatzy:
 
         # 1. Dices
         # Define
-        self.__dices = []
+        self.__dice_labels = []
         for idx in range(5):
-            new_dice = Label(self.__main_window, anchor=N)
-            self.__dices.append(new_dice)
+            new_dice = Label(self.__main_window, image=self.__empty_image,
+                             anchor=N)
+            self.__dice_labels.append(new_dice)
 
         # Place
         for idx in range(5):
-            self.__dices[idx].grid(row=0, column=idx, rowspan=2,
-                                   columnspan=1, padx=10, pady=10,
-                                   sticky=W + E + S + N)
+            self.__dice_labels[idx].grid(row=0, column=idx, rowspan=2,
+                                         columnspan=1, padx=10, pady=10,
+                                         sticky=W + E + S + N)
 
         # 2. Checkboxes
         # Define checkbox values
-        self.checkbox_value = [IntVar()] * 5
+        self.checkbox_values = [IntVar(), IntVar(), IntVar(), IntVar(),
+                                IntVar()]
 
         # Define checkboxes
         self.__checkboxes = []
         for idx in range(5):
             new_checkbox = Checkbutton(self.__main_window,
-                                       variable=self.checkbox_value[
-                                           idx], onvalue=1,
-                                       offvalue=0)
+                                       variable=self.checkbox_values[idx],
+                                       onvalue=1, offvalue=0)
             self.__checkboxes.append(new_checkbox)
 
         # Place checkboxes
         for idx in range(5):
-            self.__checkboxes[idx].grid(row=3, column=idx, sticky=N)
+            self.__checkboxes[idx].grid(row=2, column=idx, sticky=N)
 
         # 3. Roll button and number-of-roll label
         # Create components
@@ -79,7 +80,7 @@ class Yatzy:
 
         # Place components
         self.__roll_button.grid(row=3, column=0, rowspan=2,
-                                columnsoan=3, sticky=W + E + S + N)
+                                columnspan=3, sticky=W + E + S + N)
         self.__x_label.grid(row=3, column=3, rowspan=2, columnspan=1)
         self.__number_of_rolls_label.grid(row=3, column=4, rowspan=2,
                                           columnspan=1)
@@ -104,8 +105,8 @@ class Yatzy:
                                    anchor=CENTER)
 
         # Place message box
-        self.__message_box.grid(row=6, column=9, rowspan=3,
-                                columnspan=5, sticky=W + E + S + N)
+        self.__message_box.grid(row=6, column=9, rowspan=3, columnspan=5,
+                                sticky=W + E + S + N)
 
         # 6. Submit point buttons and point text label for each of them
         # Create buttons
@@ -135,12 +136,13 @@ class Yatzy:
                                          command=self.four_of_a_kind)
             }
         )
+        # Set initial relief
         for button in self.submit_buttons:
             self.submit_buttons[button].configure(relief=RAISED)
 
         # Create point labels
         self.submit_point_labels = {}
-        self.submit_buttons.update(
+        self.submit_point_labels.update(
             {
                 "ones": Label(self.__main_window, text="   "),
                 "twos": Label(self.__main_window, text="   "),
@@ -165,11 +167,26 @@ class Yatzy:
         self.submit_buttons["three_of_a_kind"].grid(row=7, column=5)
         self.submit_buttons["four_of_a_kind"].grid(row=8, column=5)
 
-        # TODO: Place point labels
+        # Place point labels
+        self.submit_point_labels["ones"].grid(row=0, column=6)
+        self.submit_point_labels["twos"].grid(row=1, column=6)
+        self.submit_point_labels["threes"].grid(row=2, column=6)
+        self.submit_point_labels["fours"].grid(row=3, column=6)
+        self.submit_point_labels["fives"].grid(row=4, column=6)
+        self.submit_point_labels["sixes"].grid(row=5, column=6)
+        self.submit_point_labels["straight"].grid(row=6, column=6)
+        self.submit_point_labels["three_of_a_kind"].grid(row=7, column=6)
+        self.submit_point_labels["four_of_a_kind"].grid(row=8, column=6)
+
+        self.new_game()
+        self.__main_window.mainloop()
 
     def roll(self):
         # TODO: Implement the function
-        pass
+        for val in self.checkbox_values:
+            print(val, val.get())
+        print()
+        print(self.checkbox_values)
 
     def sum_of(self, number):
         # TODO: Implement the function
@@ -184,6 +201,15 @@ class Yatzy:
         pass
 
     def four_of_a_kind(self):
+        # TODO: Implement the function
+        pass
+
+    def new_game(self):
+        # TODO: Implement the function
+        for dice in self.__dice_labels:
+            dice.configure(image=self.__empty_image)
+
+    def quit(self):
         # TODO: Implement the function
         pass
 

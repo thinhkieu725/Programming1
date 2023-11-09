@@ -31,7 +31,7 @@ def print_selection():
 def print_message():
     if var1.get() == 1:
         label.configure(text="OMG")
-        print(1)
+        print(var1, var2)
     else:
         label.configure(text="Oh no")
 
