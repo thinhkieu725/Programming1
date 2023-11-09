@@ -136,9 +136,9 @@ class Yatzy:
                                          command=self.four_of_a_kind)
             }
         )
-        # Set initial relief
+        # Set buttons' width and initial relief
         for button in self.submit_buttons:
-            self.submit_buttons[button].configure(relief=RAISED)
+            self.submit_buttons[button].configure(width=15, relief=RAISED)
 
         # Create point labels
         self.submit_point_labels = {}
@@ -157,26 +157,41 @@ class Yatzy:
         )
 
         # Place buttons
-        self.submit_buttons["ones"].grid(row=0, column=5)
-        self.submit_buttons["twos"].grid(row=1, column=5)
-        self.submit_buttons["threes"].grid(row=2, column=5)
-        self.submit_buttons["fours"].grid(row=3, column=5)
-        self.submit_buttons["fives"].grid(row=4, column=5)
-        self.submit_buttons["sixes"].grid(row=5, column=5)
-        self.submit_buttons["straight"].grid(row=6, column=5)
-        self.submit_buttons["three_of_a_kind"].grid(row=7, column=5)
-        self.submit_buttons["four_of_a_kind"].grid(row=8, column=5)
+        self.submit_buttons["ones"].grid(row=2, column=5)
+        self.submit_buttons["twos"].grid(row=3, column=5)
+        self.submit_buttons["threes"].grid(row=4, column=5)
+        self.submit_buttons["fours"].grid(row=5, column=5)
+        self.submit_buttons["fives"].grid(row=6, column=5)
+        self.submit_buttons["sixes"].grid(row=7, column=5)
+        self.submit_buttons["straight"].grid(row=8, column=5)
+        self.submit_buttons["three_of_a_kind"].grid(row=9, column=5)
+        self.submit_buttons["four_of_a_kind"].grid(row=10, column=5)
 
         # Place point labels
-        self.submit_point_labels["ones"].grid(row=0, column=6)
-        self.submit_point_labels["twos"].grid(row=1, column=6)
-        self.submit_point_labels["threes"].grid(row=2, column=6)
-        self.submit_point_labels["fours"].grid(row=3, column=6)
-        self.submit_point_labels["fives"].grid(row=4, column=6)
-        self.submit_point_labels["sixes"].grid(row=5, column=6)
-        self.submit_point_labels["straight"].grid(row=6, column=6)
-        self.submit_point_labels["three_of_a_kind"].grid(row=7, column=6)
-        self.submit_point_labels["four_of_a_kind"].grid(row=8, column=6)
+        self.submit_point_labels["ones"].grid(row=2, column=6)
+        self.submit_point_labels["twos"].grid(row=3, column=6)
+        self.submit_point_labels["threes"].grid(row=4, column=6)
+        self.submit_point_labels["fours"].grid(row=5, column=6)
+        self.submit_point_labels["fives"].grid(row=6, column=6)
+        self.submit_point_labels["sixes"].grid(row=7, column=6)
+        self.submit_point_labels["straight"].grid(row=8, column=6)
+        self.submit_point_labels["three_of_a_kind"].grid(row=9, column=6)
+        self.submit_point_labels["four_of_a_kind"].grid(row=10, column=6)
+
+        # 7. New game button and quit button
+        # Create components
+        self.__new_game_button = Button(self.__main_window, text="NEW GAME",
+                                        relief=RAISED, width=20,
+                                        command=self.new_game)
+        self.__quit_button = Button(self.__main_window, text="QUIT",
+                                    relief=RAISED, width=20,
+                                    command=self.quit)
+
+        # Place components
+        self.__new_game_button.grid(row=0,column=5, rowspan=1, columnspan=2,
+                                    sticky=W + E + S + N)
+        self.__quit_button.grid(row=1, column=5, rowspan=1, columnspan=2,
+                                    sticky=W + E + S + N)
 
         self.new_game()
         self.__main_window.mainloop()
