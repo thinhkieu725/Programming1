@@ -11,6 +11,8 @@ Email: thinh.kieu@tuni.fi
 """
 
 from tkinter import *
+import random
+import time
 
 # These image files have to be in the PyCharm project folder.
 IMAGE_FILES = ["1.gif", "2.gif", "3.gif", "4.gif", "5.gif", "6.gif"]
@@ -38,6 +40,7 @@ class Yatzy:
         # 1. Dices
         # Define
         self.__dice_labels = []
+        self.__dice_values = [0, 0, 0, 0, 0]
         for idx in range(5):
             new_dice = Label(self.__main_window, image=self.__empty_image,
                              anchor=N)
@@ -105,7 +108,7 @@ class Yatzy:
                                    anchor=CENTER)
 
         # Place message box
-        self.__message_box.grid(row=6, column=9, rowspan=3, columnspan=5,
+        self.__message_box.grid(row=6, column=0, rowspan=3, columnspan=5,
                                 sticky=W + E + S + N)
 
         # 6. Submit point buttons and point text label for each of them
@@ -139,6 +142,19 @@ class Yatzy:
         # Set buttons' width and initial relief
         for button in self.submit_buttons:
             self.submit_buttons[button].configure(width=15, relief=RAISED)
+        # Each submit button should be clicked only once per game, so a bool
+        # dictionary is established to easily manage which button is clicked.
+        self.__submit_button_clicked = {
+            "ones": FALSE,
+            "twos": FALSE,
+            "threes": FALSE,
+            "fours": FALSE,
+            "fives": FALSE,
+            "sixes": FALSE,
+            "straight": FALSE,
+            "three_of_a_kind": FALSE,
+            "four_of_a_kind": FALSE
+        }
 
         # Create point labels
         self.submit_point_labels = {}
@@ -157,15 +173,15 @@ class Yatzy:
         )
 
         # Place buttons
-        self.submit_buttons["ones"].grid(row=2, column=5)
-        self.submit_buttons["twos"].grid(row=3, column=5)
-        self.submit_buttons["threes"].grid(row=4, column=5)
-        self.submit_buttons["fours"].grid(row=5, column=5)
-        self.submit_buttons["fives"].grid(row=6, column=5)
-        self.submit_buttons["sixes"].grid(row=7, column=5)
-        self.submit_buttons["straight"].grid(row=8, column=5)
-        self.submit_buttons["three_of_a_kind"].grid(row=9, column=5)
-        self.submit_buttons["four_of_a_kind"].grid(row=10, column=5)
+        self.submit_buttons["ones"].grid(row=2, column=5, sticky=W)
+        self.submit_buttons["twos"].grid(row=3, column=5, sticky=W)
+        self.submit_buttons["threes"].grid(row=4, column=5, sticky=W)
+        self.submit_buttons["fours"].grid(row=5, column=5, sticky=W)
+        self.submit_buttons["fives"].grid(row=6, column=5, sticky=W)
+        self.submit_buttons["sixes"].grid(row=7, column=5, sticky=W)
+        self.submit_buttons["straight"].grid(row=8, column=5, sticky=W)
+        self.submit_buttons["three_of_a_kind"].grid(row=9, column=5, sticky=W)
+        self.submit_buttons["four_of_a_kind"].grid(row=10, column=5, sticky=W)
 
         # Place point labels
         self.submit_point_labels["ones"].grid(row=2, column=6)
@@ -188,20 +204,54 @@ class Yatzy:
                                     command=self.quit)
 
         # Place components
-        self.__new_game_button.grid(row=0,column=5, rowspan=1, columnspan=2,
+        self.__new_game_button.grid(row=0, column=5, rowspan=1, columnspan=2,
                                     sticky=W + E + S + N)
         self.__quit_button.grid(row=1, column=5, rowspan=1, columnspan=2,
-                                    sticky=W + E + S + N)
+                                sticky=W + E + S + N)
 
         self.new_game()
         self.__main_window.mainloop()
 
+    # ==== MAIN FUNCTIONS WHICH ARE ASSIGNED TO BUTTONS ====
     def roll(self):
         # TODO: Implement the function
-        for val in self.checkbox_values:
-            print(val, val.get())
-        print()
-        print(self.checkbox_values)
+        pass
+        # Decrease number_of_rolls and configure the label
+        self. __number_of_rolls -= 1
+        self.__number_of_rolls_label.configure(text=self.__number_of_rolls)
+        # Disable available submit buttons and the roll button during the roll
+        # TODO: Use function
+        self.__roll_button.configure(relief=SUNKEN, state=DISABLED)
+
+        # Check which dices are to be rolled
+        rolling_dices = []
+        for idx in range(5):
+            if self.checkbox_values[idx].get() == 0:
+                rolling_dices.append(idx)
+        # Disable the checkboxes during the roll
+        for cb in self.__checkboxes:
+            cb.configure(state=DISABLED)
+
+        # Roll the dices that are not selected to be kept
+        for idx1 in range(10):
+            for idx2 in rolling_dices:
+                self.__dice_values[idx2] = random.randint(1, 6)
+                self.__dice_labels[idx2].configure(image=self.__dice_images[
+                    self.__dice_values[idx2] - 1])
+            self.__main_window.update_idletasks()
+            time.sleep(0.05)
+
+        # Enable available submit buttons and the roll button
+        # (if number_of_rolls is greater than 0) after the roll
+        # TODO: Use function
+        print(self.__number_of_rolls)
+        if self.__number_of_rolls > 0:
+            self.__roll_button.configure(relief=RAISED, state=NORMAL)
+        # Enable checkboxes while keeping initial check state
+        for cb in self.__checkboxes:
+            cb.configure(state=NORMAL)
+
+
 
     def sum_of(self, number):
         # TODO: Implement the function
@@ -220,14 +270,71 @@ class Yatzy:
         pass
 
     def new_game(self):
-        # TODO: Implement the function
+        """
+        Set all components to the initial state.
+        """
+        # 1. Dices: Set the images to empty_image and dice_values to 0.
         for dice in self.__dice_labels:
             dice.configure(image=self.__empty_image)
+        self.__dice_values = [0, 0, 0, 0, 0]
+
+        # 2. Checkboxes: Deselect all checkboxes and set  state to DISABLED
+        for cb in self.__checkboxes:
+            cb.deselect()
+            cb.configure(state=DISABLED)
+
+        # 3. Roll button and number-of-roll label: Set the roll_button's state
+        # to normal and set the number_of_rolls to 3.
+        self.__roll_button.configure(relief=RAISED, state=NORMAL)
+        self.__number_of_rolls = 3
+        self.__number_of_rolls_label.configure(text=self.__number_of_rolls)
+
+        # 4. Total points text and label: set total points to 0.
+        self.__total_points = 0
+        self.__total_points_label.configure(text=self.__total_points)
+
+        # 5. Message box: Set messagebox content
+        new_game_content = "New game started. Roll the dices"
+        self.set_message(new_game_content)
+
+        # 6. Submit point buttons and point text label: Set all submit_buttons'
+        # state to normal, submit_button_clicked to FALSE
+        # and empty all corresponding point text labels.
+        for sb in self.submit_buttons.values():
+            sb.configure(relief=RAISED, state=NORMAL)
+        for b in self.__submit_button_clicked:
+            self.__submit_button_clicked[b] = FALSE
+        for spl in self.submit_point_labels.values():
+            spl.configure(text="   ")
 
     def quit(self):
+        """
+        Quits the game.
+        """
+        self.__main_window.destroy()
+
+    # ==== SIDE FUNCTIONS TO SUPPORT THE IMPLEMENTATION OF MAIN FUNCTIONS ====
+    def set_message(self, new_text):
+        """
+        Configure new text for the message box.
+        :param new_text: str, text to be displayed
+        """
+        self.__message_box.configure(text=new_text)
+
+    def temp_disable_checkboxes(self):
         # TODO: Implement the function
         pass
 
+    def temp_disable_available_buttons(self):
+        # TODO: Implement the function
+        pass
+
+    def temp_enable_checkboxes(self):
+        # TODO: Implement the function
+        pass
+    def temp_enable_available_buttons(self):
+        # TODO: Implement the function
+        pass
 
 def main():
     Yatzy()
