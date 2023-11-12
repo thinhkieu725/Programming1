@@ -117,18 +117,17 @@ class Yatzy:
         self.submit_buttons.update(
             {
                 "ones": Button(self.__main_window, text="Sum of ones",
-                               command=lambda: self.sum_of(self, 1)),
+                               command=self.sum_of_ones),
                 "twos": Button(self.__main_window, text="Sum of twos",
-                               command=lambda: self.sum_of(self, 2)),
-                "threes": Button(self.__main_window,
-                                 text="Sum of threes",
-                                 command=lambda: self.sum_of(self, 3)),
+                               command=self.sum_of_twos),
+                "threes": Button(self.__main_window, text="Sum of threes",
+                                 command=self.sum_of_threes),
                 "fours": Button(self.__main_window, text="Sum of fours",
-                                command=lambda: self.sum_of(self, 4)),
+                                command=self.sum_of_fours),
                 "fives": Button(self.__main_window, text="Sum of fives",
-                                command=lambda: self.sum_of(self, 5)),
+                                command=self.sum_of_fives),
                 "sixes": Button(self.__main_window, text="Sum of sixes",
-                                command=lambda: self.sum_of(self, 6)),
+                                command=self.sum_of_sixes),
                 "straight": Button(self.__main_window, text="Straight",
                                    command=self.straight),
                 "three_of_a_kind": Button(self.__main_window,
@@ -213,14 +212,17 @@ class Yatzy:
         self.__main_window.mainloop()
 
     # ==== MAIN FUNCTIONS WHICH ARE ASSIGNED TO BUTTONS ====
+    # 1. Roll button
     def roll(self):
-        # TODO: Implement the function
-        pass
+        """
+        Roll the dice, display dice animations and prevent clicking other
+        buttons that may cause errors while rolling.
+        """
         # Decrease number_of_rolls and configure the label
-        self. __number_of_rolls -= 1
+        self.__number_of_rolls -= 1
         self.__number_of_rolls_label.configure(text=self.__number_of_rolls)
         # Disable available submit buttons and the roll button during the roll
-        # TODO: Use function
+        self.disable_available_submit_buttons()
         self.__roll_button.configure(relief=SUNKEN, state=DISABLED)
 
         # Check which dices are to be rolled
@@ -229,8 +231,7 @@ class Yatzy:
             if self.checkbox_values[idx].get() == 0:
                 rolling_dices.append(idx)
         # Disable the checkboxes during the roll
-        for cb in self.__checkboxes:
-            cb.configure(state=DISABLED)
+        self.disable_checkboxes()
 
         # Roll the dices that are not selected to be kept
         for idx1 in range(10):
@@ -243,32 +244,214 @@ class Yatzy:
 
         # Enable available submit buttons and the roll button
         # (if number_of_rolls is greater than 0) after the roll
-        # TODO: Use function
-        print(self.__number_of_rolls)
+        self.enable_available_submit_buttons()
         if self.__number_of_rolls > 0:
             self.__roll_button.configure(relief=RAISED, state=NORMAL)
         # Enable checkboxes while keeping initial check state
-        for cb in self.__checkboxes:
-            cb.configure(state=NORMAL)
+        if self.__number_of_rolls > 0:
+            self.enable_checkboxes()
 
+    # 2. Submit buttons
+    # Basically, for each submit button, the function goes through 6 steps:
+    # a. Mark the button as clicked
+    # b. Determine the number of points for the round
+    # c. Display the corresponding point label
+    # d. Calculate and update the total point label
+    # e. Display the message in the messagebox
+    # f. Set up the next round
+    def sum_of_ones(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["ones"]
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["ones"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = self.sum_of(1)
+        # c. Display the corresponding point label
+        self.submit_point_labels["ones"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Sum of ones", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
 
+    def sum_of_twos(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["twos"]
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["twos"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = self.sum_of(2)
+        # c. Display the corresponding point label
+        self.submit_point_labels["twos"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Sum of twos", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
 
-    def sum_of(self, number):
-        # TODO: Implement the function
-        pass
+    def sum_of_threes(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["threes"]
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["threes"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = self.sum_of(3)
+        # c. Display the corresponding point label
+        self.submit_point_labels["threes"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Sum of threes", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def sum_of_fours(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["fours"]
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["fours"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = self.sum_of(4)
+        # c. Display the corresponding point label
+        self.submit_point_labels["fours"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Sum of fours", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def sum_of_fives(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["fives"]
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["fives"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = self.sum_of(5)
+        # c. Display the corresponding point label
+        self.submit_point_labels["fives"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Sum of fives", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def sum_of_sixes(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["sixes"]
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["sixes"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = self.sum_of(6)
+        # c. Display the corresponding point label
+        self.submit_point_labels["sixes"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Sum of sixes", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
 
     def straight(self):
-        # TODO: Implement the function
-        pass
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["straight"]
+        Straight is defined as [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in any order.
+        Score for a straight: 25
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["straight"] = TRUE
+        # b. Determine the number of points for the round
+        if (2 in self.__dice_values and 3 in self.__dice_values and
+            4 in self.__dice_values and 5 in self.__dice_values) and (
+                1 in self.__dice_values or 6 in self.__dice_values):
+            round_points = 25
+        else:
+            round_points = 0
+        # c. Display the corresponding point label
+        self.submit_point_labels["straight"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Straight", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
 
     def three_of_a_kind(self):
-        # TODO: Implement the function
-        pass
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["three of a kind"]
+        Three of a kind means at least three of the dices have the same value.
+        Score for a three of a kind combination: 20
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["three_of_a_kind"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = 0
+        for val in range(1, 7):
+            if self.__dice_values.count(val) >= 3:
+                round_points = 20
+        # c. Display the corresponding point label
+        self.submit_point_labels["three_of_a_kind"].configure(
+            text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(
+            self.get_round_message("Three of a kind", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
 
     def four_of_a_kind(self):
-        # TODO: Implement the function
-        pass
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["three of a kind"]
+        Four of a kind means at least four of the dices have the same value.
+        Score for a four of a kind combination: 30
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["four_of_a_kind"] = TRUE
+        # b. Determine the number of points for the round
+        round_points = 0
+        for val in range(1, 7):
+            if self.__dice_values.count(val) >= 4:
+                round_points = 30
+        # c. Display the corresponding point label
+        self.submit_point_labels["four_of_a_kind"].configure(
+            text=round_points)
+        # d. Calculate and update the total point label
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
+        # e. Display the message in the messagebox
+        self.set_message(
+            self.get_round_message("Four of a kind", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
 
+    # 3. New game button and Quit button
     def new_game(self):
         """
         Set all components to the initial state.
@@ -278,7 +461,7 @@ class Yatzy:
             dice.configure(image=self.__empty_image)
         self.__dice_values = [0, 0, 0, 0, 0]
 
-        # 2. Checkboxes: Deselect all checkboxes and set  state to DISABLED
+        # 2. Checkboxes: Deselect all checkboxes and set state to DISABLED
         for cb in self.__checkboxes:
             cb.deselect()
             cb.configure(state=DISABLED)
@@ -294,14 +477,13 @@ class Yatzy:
         self.__total_points_label.configure(text=self.__total_points)
 
         # 5. Message box: Set messagebox content
-        new_game_content = "New game started. Roll the dices"
+        new_game_content = "New game started. Please roll the dices!"
         self.set_message(new_game_content)
 
         # 6. Submit point buttons and point text label: Set all submit_buttons'
-        # state to normal, submit_button_clicked to FALSE
+        # state to disabled, submit_button_clicked to FALSE
         # and empty all corresponding point text labels.
-        for sb in self.submit_buttons.values():
-            sb.configure(relief=RAISED, state=NORMAL)
+        self.disable_available_submit_buttons()
         for b in self.__submit_button_clicked:
             self.__submit_button_clicked[b] = FALSE
         for spl in self.submit_point_labels.values():
@@ -314,6 +496,18 @@ class Yatzy:
         self.__main_window.destroy()
 
     # ==== SIDE FUNCTIONS TO SUPPORT THE IMPLEMENTATION OF MAIN FUNCTIONS ====
+    def sum_of(self, number):
+        """
+        Calculate the sum of dices that has the inquired number.
+        :param number: the reference number
+        :return: int, sum of the dices whose number is the reference number.
+        """
+        result = 0
+        for val in self.__dice_values:
+            if val == number:
+                result += number
+        return result
+
     def set_message(self, new_text):
         """
         Configure new text for the message box.
@@ -321,20 +515,93 @@ class Yatzy:
         """
         self.__message_box.configure(text=new_text)
 
-    def temp_disable_checkboxes(self):
-        # TODO: Implement the function
-        pass
+    def disable_checkboxes(self):
+        """
+        Disable all checkboxes while keeping the check state.
+        """
+        for cb in self.__checkboxes:
+            cb.configure(state=DISABLED)
 
-    def temp_disable_available_buttons(self):
-        # TODO: Implement the function
-        pass
+    def enable_checkboxes(self):
+        """
+        Enable all checkboxes while keeping the check state before disabled.
+        """
+        for cb in self.__checkboxes:
+            cb.configure(state=NORMAL)
 
-    def temp_enable_checkboxes(self):
-        # TODO: Implement the function
-        pass
-    def temp_enable_available_buttons(self):
-        # TODO: Implement the function
-        pass
+    def clear_checkboxes(self):
+        """
+        Clear all checkboxes.
+        """
+        for cb in self.__checkboxes:
+            cb.deselect()
+
+    def disable_available_submit_buttons(self):
+        """
+        Disable all (available) submit buttons.
+        """
+        for sb in self.submit_buttons.values():
+            sb.configure(relief=SUNKEN, state=DISABLED)
+
+    def enable_available_submit_buttons(self):
+        """
+        Enable available submit buttons - whose submit_button_clicked is FALSE.
+        """
+        for sb_name in self.__submit_button_clicked:
+            if self.__submit_button_clicked[sb_name] == FALSE:
+                self.submit_buttons[sb_name].configure(relief=RAISED,
+                                                       state=NORMAL)
+
+    def game_over(self):
+        """
+        Check whether the game is over,
+        i.e. whether all submit buttons are clicked.
+        :return: bool, TRUE if the game is over.
+        """
+        for sb_name in self.__submit_button_clicked:
+            if self.__submit_button_clicked[sb_name] == FALSE:
+                return FALSE
+        return TRUE
+
+    def get_round_message(self, button_name, round_points):
+        """
+        Get a round message to display after a round (clicking a submit button)
+        :param button_name: the clicked submit button
+        :param round_points: the number of points got from that round
+        :return: string, the round message to be displayed
+        """
+        round_message1 = (f"{button_name} is chosen.\n"
+                          f"Your score for this round: {round_points}\n")
+        if self.game_over() == FALSE:
+            round_message2 = "Please roll the dices!"
+        else:
+            round_message2 = (f"The game is over. Your total points is "
+                              f"{self.__total_points}. Congratulations!")
+        return round_message1 + round_message2
+
+    def set_up_next_round(self):
+        """
+        Set up the buttons and checkboxes for the next round.
+        """
+        if self.game_over() == FALSE:
+            # Roll button and number of rolls
+            self.__number_of_rolls = 3
+            self.__number_of_rolls_label.configure(text=self.__number_of_rolls)
+            self.__roll_button.configure(relief=RAISED, state=NORMAL)
+            # Checkboxes
+            self.clear_checkboxes()
+            self.disable_checkboxes()
+            # Submit buttons
+            self.disable_available_submit_buttons()
+        # If the game is over
+        else:
+            # Disable checkboxes and roll button
+            self.disable_checkboxes()
+            self.__roll_button.configure(relief=SUNKEN, state=DISABLED)
+            # Set number of rolls to 0
+            self.__number_of_rolls = 0
+            self.__number_of_rolls_label.configure(text=self.__number_of_rolls)
+
 
 def main():
     Yatzy()
