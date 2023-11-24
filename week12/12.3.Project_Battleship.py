@@ -174,16 +174,19 @@ class Battleship_Game:
             # If the shot does not hit any ship.
             if attacked_ship == -1:
                 self.set_mark(prompt, "*")
+
             # If the shot hits a ship.
             else:
                 # Mark X at the attacked square
                 self.set_mark(prompt, "X")
+
                 # Check if the attacked ship is sunken
                 attacked_ship_sunken = True
                 for coord in self.__ships[attacked_ship].get_ship_coordinate():
                     if self.get_mark(coord) == " ":
                         attacked_ship_sunken = False
                         break
+
                 # If the attacked ship is sunken
                 if attacked_ship_sunken:
                     # Update the ship's state
@@ -198,6 +201,7 @@ class Battleship_Game:
                         f"{self.__ships[attacked_ship].get_ship_type()}!")
 
             self.print_board()
+
             # At the end of each round in which a ship it hit,
             # check whether the player has won the game.
             if self.win():
@@ -247,22 +251,26 @@ class Battleship_Game:
         Print out the game board.
         """
         print()
+
         # Print the top navigating row.
         print("  ", end="")
         for c in X_COORDINATES:
             print(c, end=" ")
         print()
+
         # Print 10 main rows.
         for y_coord in range(10):
             print(y_coord, end=" ")
             for x_coord in range(10):
                 print(self.__board[y_coord][x_coord], end=" ")
             print(y_coord)
+
         # Print the top navigating row.
         print("  ", end="")
         for c in X_COORDINATES:
             print(c, end=" ")
         print()
+
         print()
 
     def win(self):

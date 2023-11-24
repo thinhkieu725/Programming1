@@ -128,14 +128,15 @@ class Yatzy:
                                 command=self.sum_of_fives),
                 "sixes": Button(self.__main_window, text="Sum of sixes",
                                 command=self.sum_of_sixes),
-                "straight": Button(self.__main_window, text="Straight",
-                                   command=self.straight),
                 "three_of_a_kind": Button(self.__main_window,
                                           text="Three of a kind",
                                           command=self.three_of_a_kind),
                 "four_of_a_kind": Button(self.__main_window,
                                          text="Four of a kind",
-                                         command=self.four_of_a_kind)
+                                         command=self.four_of_a_kind),
+                "large_straight": Button(self.__main_window,
+                                         text="Large straight",
+                                         command=self.large_straight)
             }
         )
         # Set buttons' width and initial relief
@@ -150,24 +151,24 @@ class Yatzy:
             "fours": FALSE,
             "fives": FALSE,
             "sixes": FALSE,
-            "straight": FALSE,
             "three_of_a_kind": FALSE,
-            "four_of_a_kind": FALSE
+            "four_of_a_kind": FALSE,
+            "large_straight": FALSE,
         }
 
         # Create point labels
         self.submit_point_labels = {}
         self.submit_point_labels.update(
             {
-                "ones": Label(self.__main_window, text="   "),
-                "twos": Label(self.__main_window, text="   "),
-                "threes": Label(self.__main_window, text="   "),
-                "fours": Label(self.__main_window, text="   "),
-                "fives": Label(self.__main_window, text="   "),
-                "sixes": Label(self.__main_window, text="   "),
-                "straight": Label(self.__main_window, text="   "),
-                "three_of_a_kind": Label(self.__main_window, text="   "),
-                "four_of_a_kind": Label(self.__main_window, text="   ")
+                "ones": Label(self.__main_window, width=4),
+                "twos": Label(self.__main_window, width=4),
+                "threes": Label(self.__main_window, width=4),
+                "fours": Label(self.__main_window, width=4),
+                "fives": Label(self.__main_window, width=4),
+                "sixes": Label(self.__main_window, width=4),
+                "three_of_a_kind": Label(self.__main_window, width=4),
+                "four_of_a_kind": Label(self.__main_window, width=4),
+                "large_straight": Label(self.__main_window, width=4)
             }
         )
 
@@ -178,9 +179,9 @@ class Yatzy:
         self.submit_buttons["fours"].grid(row=5, column=5, sticky=W)
         self.submit_buttons["fives"].grid(row=6, column=5, sticky=W)
         self.submit_buttons["sixes"].grid(row=7, column=5, sticky=W)
-        self.submit_buttons["straight"].grid(row=8, column=5, sticky=W)
-        self.submit_buttons["three_of_a_kind"].grid(row=9, column=5, sticky=W)
-        self.submit_buttons["four_of_a_kind"].grid(row=10, column=5, sticky=W)
+        self.submit_buttons["three_of_a_kind"].grid(row=2, column=7, sticky=W)
+        self.submit_buttons["four_of_a_kind"].grid(row=3, column=7, sticky=W)
+        self.submit_buttons["large_straight"].grid(row=6, column=7, sticky=W)
 
         # Place point labels
         self.submit_point_labels["ones"].grid(row=2, column=6)
@@ -189,23 +190,23 @@ class Yatzy:
         self.submit_point_labels["fours"].grid(row=5, column=6)
         self.submit_point_labels["fives"].grid(row=6, column=6)
         self.submit_point_labels["sixes"].grid(row=7, column=6)
-        self.submit_point_labels["straight"].grid(row=8, column=6)
-        self.submit_point_labels["three_of_a_kind"].grid(row=9, column=6)
-        self.submit_point_labels["four_of_a_kind"].grid(row=10, column=6)
+        self.submit_point_labels["three_of_a_kind"].grid(row=2, column=8)
+        self.submit_point_labels["four_of_a_kind"].grid(row=3, column=8)
+        self.submit_point_labels["large_straight"].grid(row=6, column=8)
 
         # 7. New game button and quit button
         # Create components
         self.__new_game_button = Button(self.__main_window, text="NEW GAME",
-                                        relief=RAISED, width=20,
+                                        relief=RAISED, width=40,
                                         command=self.new_game)
         self.__quit_button = Button(self.__main_window, text="QUIT",
-                                    relief=RAISED, width=20,
+                                    relief=RAISED, width=40,
                                     command=self.quit)
 
         # Place components
-        self.__new_game_button.grid(row=0, column=5, rowspan=1, columnspan=2,
+        self.__new_game_button.grid(row=0, column=5, rowspan=1, columnspan=4,
                                     sticky=W + E + S + N)
-        self.__quit_button.grid(row=1, column=5, rowspan=1, columnspan=2,
+        self.__quit_button.grid(row=1, column=5, rowspan=1, columnspan=4,
                                 sticky=W + E + S + N)
 
         self.new_game()
@@ -373,29 +374,29 @@ class Yatzy:
         # f. Set up the next round
         self.set_up_next_round()
 
-    def straight(self):
+    def large_straight(self):
         """
         End a round, update the points and set up the next round.
-        Button associated: submit_button["straight"]
-        Straight is defined as [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in any order.
-        Score for a straight: 25
+        Button associated: submit_button["large_straight"]
+        Large straight is [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in any order.
+        Score for a large straight: 40
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["straight"] = TRUE
+        self.__submit_button_clicked["large_straight"] = TRUE
         # b. Determine the number of points for the round
         if (2 in self.__dice_values and 3 in self.__dice_values and
             4 in self.__dice_values and 5 in self.__dice_values) and (
                 1 in self.__dice_values or 6 in self.__dice_values):
-            round_points = 25
+            round_points = 40
         else:
             round_points = 0
         # c. Display the corresponding point label
-        self.submit_point_labels["straight"].configure(text=round_points)
+        self.submit_point_labels["large_straight"].configure(text=round_points)
         # d. Calculate and update the total point label
         self.__total_points += round_points
         self.__total_points_label.configure(text=self.__total_points)
         # e. Display the message in the messagebox
-        self.set_message(self.get_round_message("Straight", round_points))
+        self.set_message(self.get_round_message("Large straight", round_points))
         # f. Set up the next round
         self.set_up_next_round()
 
