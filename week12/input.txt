@@ -1,0 +1,5 @@
+battleship;A1;A2;A3;A4
+cruiser;E1;F1;G1
+destroyer;D5;D6
+submarine;I9
+destroyer;D6;D7
