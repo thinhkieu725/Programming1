@@ -7,7 +7,51 @@ Student ID number: 152167613
 Student ID: dxthki
 Email: thinh.kieu@tuni.fi
 
-# TODO: Add program description
+This program is expected to be an advanced GUI implementation. It comprises GUI
+components that has not been previously introduced in the course: Checkbutton.
+
+This project aims to create a one-player version of the dice game Yahtzee.
+
+=============== RULES OF THE GAME ===============
+The objective of the game is to score as many points as possible.
+In each round of the game, the player has three rolls of dice. However, they
+have the free decision to choose to end their turn after one or two rolls.
+After the first roll and the second roll of the round, they can save any of the
+five dices and re-roll the other dice. After the third roll, they have to end
+the round. The round is ended by choosing one of 13 categories to get the round
+score. The score received depends on how well the five dices match the scoring
+rule for the category. The categories are:
+- Sum of ones: The sum of dices with the number 1;
+- Sum of twos: The sum of dices with the number 2;
+- Sum of threes: The sum of dices with the number 3;
+- Sum of fours: The sum of dices with the number 4;
+- Sum of fives: The sum of dices with the number 5;
+- Sum of sixes: The sum of dices with the number 6;
+- Three of a kind: At least three dices the same, the score is sum of all dices;
+- Four of a kind: At least four dices the same, the score is sum of all dices;
+- Full house: Three of a kind and a pair, the score is 25;
+- Small straight: Four sequential dices, the score is 30;
+- Large straight: Five sequential dices, the score is 40;
+- Yahtzee: All five dices the same, the score is 50;
+- Chance: Any combination, the score is sum of all dices.
+
+If one of the seven last categories are chosen but the dices do not match the
+requirements of the category, the score for the round is 0.
+Each category can be chosen once per game and the game ends when all 13
+categories are chosen.
+
+=============== NOTES ABOUT PROGRAM CONSTRUCTION ===============
+In this program, the whole GUI is constructed within the class Yahtzee.
+For easier management, the GUI components are divided into 7 categories.
+1. Dices
+2. Checkboxes
+3. Roll button and number-of-roll label
+4. Total points text and label
+5. Message box
+6. Submit point buttons and point text label for each of them
+7. New game button and quit button
+
+Other details have been clearly noted in the program.
 """
 
 from tkinter import *
@@ -18,13 +62,13 @@ import time
 IMAGE_FILES = ["1.gif", "2.gif", "3.gif", "4.gif", "5.gif", "6.gif"]
 
 
-class Yatzy:
+class Yahtzee:
     def __init__(self):
         # ===== INITIALIZE THE WINDOW AND IMAGES =====
 
         # Initialize the root window
         self.__main_window = Tk()
-        self.__main_window.title("Yatzy")
+        self.__main_window.title("Yahtzee")
 
         # Create PhotoImage objects and store them in a list
         self.__dice_images = []
@@ -128,14 +172,24 @@ class Yatzy:
                                 command=self.sum_of_fives),
                 "sixes": Button(self.__main_window, text="Sum of sixes",
                                 command=self.sum_of_sixes),
-                "straight": Button(self.__main_window, text="Straight",
-                                   command=self.straight),
                 "three_of_a_kind": Button(self.__main_window,
                                           text="Three of a kind",
                                           command=self.three_of_a_kind),
                 "four_of_a_kind": Button(self.__main_window,
                                          text="Four of a kind",
-                                         command=self.four_of_a_kind)
+                                         command=self.four_of_a_kind),
+                "full_house": Button(self.__main_window, text="Full house",
+                                     command=self.full_house),
+                "small_straight": Button(self.__main_window,
+                                         text="Small straight",
+                                         command=self.small_straight),
+                "large_straight": Button(self.__main_window,
+                                         text="Large straight",
+                                         command=self.large_straight),
+                "yahtzee": Button(self.__main_window, text="Yahtzee",
+                                  command=self.yahtzee),
+                "chance": Button(self.__main_window, text="Chance",
+                                 command=self.chance)
             }
         )
         # Set buttons' width and initial relief
@@ -144,30 +198,38 @@ class Yatzy:
         # Each submit button should be clicked only once per game, so a bool
         # dictionary is established to easily manage which button is clicked.
         self.__submit_button_clicked = {
-            "ones": FALSE,
-            "twos": FALSE,
-            "threes": FALSE,
-            "fours": FALSE,
-            "fives": FALSE,
-            "sixes": FALSE,
-            "straight": FALSE,
-            "three_of_a_kind": FALSE,
-            "four_of_a_kind": FALSE
+            "ones": False,
+            "twos": False,
+            "threes": False,
+            "fours": False,
+            "fives": False,
+            "sixes": False,
+            "three_of_a_kind": False,
+            "four_of_a_kind": False,
+            "full_house": False,
+            "small_straight": False,
+            "large_straight": False,
+            "yahtzee": False,
+            "chance": False
         }
 
         # Create point labels
         self.submit_point_labels = {}
         self.submit_point_labels.update(
             {
-                "ones": Label(self.__main_window, text="   "),
-                "twos": Label(self.__main_window, text="   "),
-                "threes": Label(self.__main_window, text="   "),
-                "fours": Label(self.__main_window, text="   "),
-                "fives": Label(self.__main_window, text="   "),
-                "sixes": Label(self.__main_window, text="   "),
-                "straight": Label(self.__main_window, text="   "),
-                "three_of_a_kind": Label(self.__main_window, text="   "),
-                "four_of_a_kind": Label(self.__main_window, text="   ")
+                "ones": Label(self.__main_window, width=4),
+                "twos": Label(self.__main_window, width=4),
+                "threes": Label(self.__main_window, width=4),
+                "fours": Label(self.__main_window, width=4),
+                "fives": Label(self.__main_window, width=4),
+                "sixes": Label(self.__main_window, width=4),
+                "three_of_a_kind": Label(self.__main_window, width=4),
+                "four_of_a_kind": Label(self.__main_window, width=4),
+                "full_house": Label(self.__main_window, width=4),
+                "small_straight": Label(self.__main_window, width=4),
+                "large_straight": Label(self.__main_window, width=4),
+                "yahtzee": Label(self.__main_window, width=4),
+                "chance": Label(self.__main_window, width=4)
             }
         )
 
@@ -178,9 +240,13 @@ class Yatzy:
         self.submit_buttons["fours"].grid(row=5, column=5, sticky=W)
         self.submit_buttons["fives"].grid(row=6, column=5, sticky=W)
         self.submit_buttons["sixes"].grid(row=7, column=5, sticky=W)
-        self.submit_buttons["straight"].grid(row=8, column=5, sticky=W)
-        self.submit_buttons["three_of_a_kind"].grid(row=9, column=5, sticky=W)
-        self.submit_buttons["four_of_a_kind"].grid(row=10, column=5, sticky=W)
+        self.submit_buttons["three_of_a_kind"].grid(row=2, column=7, sticky=W)
+        self.submit_buttons["four_of_a_kind"].grid(row=3, column=7, sticky=W)
+        self.submit_buttons["full_house"].grid(row=4, column=7, sticky=W)
+        self.submit_buttons["small_straight"].grid(row=5, column=7, sticky=W)
+        self.submit_buttons["large_straight"].grid(row=6, column=7, sticky=W)
+        self.submit_buttons["yahtzee"].grid(row=7, column=7, sticky=W)
+        self.submit_buttons["chance"].grid(row=8, column=7, sticky=W)
 
         # Place point labels
         self.submit_point_labels["ones"].grid(row=2, column=6)
@@ -189,23 +255,27 @@ class Yatzy:
         self.submit_point_labels["fours"].grid(row=5, column=6)
         self.submit_point_labels["fives"].grid(row=6, column=6)
         self.submit_point_labels["sixes"].grid(row=7, column=6)
-        self.submit_point_labels["straight"].grid(row=8, column=6)
-        self.submit_point_labels["three_of_a_kind"].grid(row=9, column=6)
-        self.submit_point_labels["four_of_a_kind"].grid(row=10, column=6)
+        self.submit_point_labels["three_of_a_kind"].grid(row=2, column=8)
+        self.submit_point_labels["four_of_a_kind"].grid(row=3, column=8)
+        self.submit_point_labels["full_house"].grid(row=4, column=8)
+        self.submit_point_labels["small_straight"].grid(row=5, column=8)
+        self.submit_point_labels["large_straight"].grid(row=6, column=8)
+        self.submit_point_labels["yahtzee"].grid(row=7, column=8)
+        self.submit_point_labels["chance"].grid(row=8, column=8)
 
         # 7. New game button and quit button
         # Create components
         self.__new_game_button = Button(self.__main_window, text="NEW GAME",
-                                        relief=RAISED, width=20,
+                                        relief=RAISED, width=40,
                                         command=self.new_game)
         self.__quit_button = Button(self.__main_window, text="QUIT",
-                                    relief=RAISED, width=20,
+                                    relief=RAISED, width=40,
                                     command=self.quit)
 
         # Place components
-        self.__new_game_button.grid(row=0, column=5, rowspan=1, columnspan=2,
+        self.__new_game_button.grid(row=0, column=5, rowspan=1, columnspan=4,
                                     sticky=W + E + S + N)
-        self.__quit_button.grid(row=1, column=5, rowspan=1, columnspan=2,
+        self.__quit_button.grid(row=1, column=5, rowspan=1, columnspan=4,
                                 sticky=W + E + S + N)
 
         self.new_game()
@@ -233,6 +303,9 @@ class Yatzy:
         # Disable the checkboxes during the roll
         self.disable_checkboxes()
 
+        # Set the new message
+        self.set_message("Rolling the dices...")
+
         # Roll the dices that are not selected to be kept
         for idx1 in range(10):
             for idx2 in rolling_dices:
@@ -251,6 +324,13 @@ class Yatzy:
         if self.__number_of_rolls > 0:
             self.enable_checkboxes()
 
+        # Set the new message
+        if self.__number_of_rolls > 0:
+            self.set_message("Choose the dices to keep and re-roll or "
+                             "choose a category to submit the points.")
+        else:
+            self.set_message("Choose a category to submit the points.")
+
     # 2. Submit buttons
     # Basically, for each submit button, the function goes through 6 steps:
     # a. Mark the button as clicked
@@ -265,14 +345,13 @@ class Yatzy:
         Button associated: submit_button["ones"]
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["ones"] = TRUE
+        self.__submit_button_clicked["ones"] = True
         # b. Determine the number of points for the round
         round_points = self.sum_of(1)
         # c. Display the corresponding point label
         self.submit_point_labels["ones"].configure(text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(self.get_round_message("Sum of ones", round_points))
         # f. Set up the next round
@@ -284,14 +363,13 @@ class Yatzy:
         Button associated: submit_button["twos"]
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["twos"] = TRUE
+        self.__submit_button_clicked["twos"] = True
         # b. Determine the number of points for the round
         round_points = self.sum_of(2)
         # c. Display the corresponding point label
         self.submit_point_labels["twos"].configure(text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(self.get_round_message("Sum of twos", round_points))
         # f. Set up the next round
@@ -303,14 +381,13 @@ class Yatzy:
         Button associated: submit_button["threes"]
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["threes"] = TRUE
+        self.__submit_button_clicked["threes"] = True
         # b. Determine the number of points for the round
         round_points = self.sum_of(3)
         # c. Display the corresponding point label
         self.submit_point_labels["threes"].configure(text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(self.get_round_message("Sum of threes", round_points))
         # f. Set up the next round
@@ -322,14 +399,13 @@ class Yatzy:
         Button associated: submit_button["fours"]
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["fours"] = TRUE
+        self.__submit_button_clicked["fours"] = True
         # b. Determine the number of points for the round
         round_points = self.sum_of(4)
         # c. Display the corresponding point label
         self.submit_point_labels["fours"].configure(text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(self.get_round_message("Sum of fours", round_points))
         # f. Set up the next round
@@ -341,14 +417,13 @@ class Yatzy:
         Button associated: submit_button["fives"]
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["fives"] = TRUE
+        self.__submit_button_clicked["fives"] = True
         # b. Determine the number of points for the round
         round_points = self.sum_of(5)
         # c. Display the corresponding point label
         self.submit_point_labels["fives"].configure(text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(self.get_round_message("Sum of fives", round_points))
         # f. Set up the next round
@@ -360,65 +435,37 @@ class Yatzy:
         Button associated: submit_button["sixes"]
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["sixes"] = TRUE
+        self.__submit_button_clicked["sixes"] = True
         # b. Determine the number of points for the round
         round_points = self.sum_of(6)
         # c. Display the corresponding point label
         self.submit_point_labels["sixes"].configure(text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(self.get_round_message("Sum of sixes", round_points))
-        # f. Set up the next round
-        self.set_up_next_round()
-
-    def straight(self):
-        """
-        End a round, update the points and set up the next round.
-        Button associated: submit_button["straight"]
-        Straight is defined as [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in any order.
-        Score for a straight: 25
-        """
-        # a. Mark the button as clicked
-        self.__submit_button_clicked["straight"] = TRUE
-        # b. Determine the number of points for the round
-        if (2 in self.__dice_values and 3 in self.__dice_values and
-            4 in self.__dice_values and 5 in self.__dice_values) and (
-                1 in self.__dice_values or 6 in self.__dice_values):
-            round_points = 25
-        else:
-            round_points = 0
-        # c. Display the corresponding point label
-        self.submit_point_labels["straight"].configure(text=round_points)
-        # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
-        # e. Display the message in the messagebox
-        self.set_message(self.get_round_message("Straight", round_points))
         # f. Set up the next round
         self.set_up_next_round()
 
     def three_of_a_kind(self):
         """
         End a round, update the points and set up the next round.
-        Button associated: submit_button["three of a kind"]
+        Button associated: submit_button["three_of_a_kind"]
         Three of a kind means at least three of the dices have the same value.
-        Score for a three of a kind combination: 20
+        Score for a three of a kind combination: sum of all dices.
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["three_of_a_kind"] = TRUE
+        self.__submit_button_clicked["three_of_a_kind"] = True
         # b. Determine the number of points for the round
         round_points = 0
         for val in range(1, 7):
             if self.__dice_values.count(val) >= 3:
-                round_points = 20
+                round_points = self.sum_of_all_dices()
         # c. Display the corresponding point label
         self.submit_point_labels["three_of_a_kind"].configure(
             text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(
             self.get_round_message("Three of a kind", round_points))
@@ -428,26 +475,150 @@ class Yatzy:
     def four_of_a_kind(self):
         """
         End a round, update the points and set up the next round.
-        Button associated: submit_button["three of a kind"]
+        Button associated: submit_button["four_of_a_kind"]
         Four of a kind means at least four of the dices have the same value.
-        Score for a four of a kind combination: 30
+        Score for a four of a kind combination: sum of all dices.
         """
         # a. Mark the button as clicked
-        self.__submit_button_clicked["four_of_a_kind"] = TRUE
+        self.__submit_button_clicked["four_of_a_kind"] = True
         # b. Determine the number of points for the round
         round_points = 0
         for val in range(1, 7):
             if self.__dice_values.count(val) >= 4:
-                round_points = 30
+                round_points = self.sum_of_all_dices()
         # c. Display the corresponding point label
         self.submit_point_labels["four_of_a_kind"].configure(
             text=round_points)
         # d. Calculate and update the total point label
-        self.__total_points += round_points
-        self.__total_points_label.configure(text=self.__total_points)
+        self.update_point(round_points)
         # e. Display the message in the messagebox
         self.set_message(
             self.get_round_message("Four of a kind", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def full_house(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["full_house"]
+        Full house means a three-of-a-kind combination and a pair.
+        Score for a full house: 25.
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["full_house"] = True
+        # b. Determine the number of points for the round
+        s_dices = sorted(self.__dice_values)
+        if (((s_dices[0] == s_dices[1]) and
+             (s_dices[2] == s_dices[3]) and (s_dices[3] == s_dices[4]))
+                or ((s_dices[0] == s_dices[1] and s_dices[1] == s_dices[2]) and
+                    (s_dices[3] == s_dices[4]))):
+            round_points = 25
+        else:
+            round_points = 0
+        # c. Display the corresponding point label
+        self.submit_point_labels["full_house"].configure(
+            text=round_points)
+        # d. Calculate and update the total point label
+        self.update_point(round_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Full house", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def small_straight(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["small_straight"]
+        Small straight means a straight of at least four dices
+        ([1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6]).
+        Score for a small straight: 30
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["small_straight"] = True
+        # b. Determine the number of points for the round
+        if (((2 in self.__dice_values and 3 in self.__dice_values) and (
+                1 in self.__dice_values or 4 in self.__dice_values)) or
+                (3 in self.__dice_values and 4 in self.__dice_values and
+                 5 in self.__dice_values and 6 in self.__dice_values)):
+            round_points = 30
+        else:
+            round_points = 0
+        # c. Display the corresponding point label
+        self.submit_point_labels["small_straight"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.update_point(round_points)
+        # e. Display the message in the messagebox
+        self.set_message(
+            self.get_round_message("Small straight", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def large_straight(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["large_straight"]
+        Large straight is [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in any order.
+        Score for a large straight: 40
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["large_straight"] = True
+        # b. Determine the number of points for the round
+        if (2 in self.__dice_values and 3 in self.__dice_values and
+            4 in self.__dice_values and 5 in self.__dice_values) and (
+                1 in self.__dice_values or 6 in self.__dice_values):
+            round_points = 40
+        else:
+            round_points = 0
+        # c. Display the corresponding point label
+        self.submit_point_labels["large_straight"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.update_point(round_points)
+        # e. Display the message in the messagebox
+        self.set_message(
+            self.get_round_message("Large straight", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def yahtzee(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["yahtzee"]
+        Yahtzee means all dices have the same value.
+        Score for a Yahtzee combination: 50.
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["yahtzee"] = True
+        # b. Determine the number of points for the round
+        round_points = 0
+        for val in range(1, 7):
+            if self.__dice_values.count(val) == 5:
+                round_points = 50
+        # c. Display the corresponding point label
+        self.submit_point_labels["yahtzee"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.update_point(round_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Yahtzee", round_points))
+        # f. Set up the next round
+        self.set_up_next_round()
+
+    def chance(self):
+        """
+        End a round, update the points and set up the next round.
+        Button associated: submit_button["chance"]
+        Chance means any combination of dices.
+        Score for a chance combination: sum of all dices.
+        """
+        # a. Mark the button as clicked
+        self.__submit_button_clicked["chance"] = True
+        # b. Determine the number of points for the round
+        round_points = self.sum_of_all_dices()
+        # c. Display the corresponding point label
+        self.submit_point_labels["chance"].configure(text=round_points)
+        # d. Calculate and update the total point label
+        self.update_point(round_points)
+        # e. Display the message in the messagebox
+        self.set_message(self.get_round_message("Chance", round_points))
         # f. Set up the next round
         self.set_up_next_round()
 
@@ -481,11 +652,11 @@ class Yatzy:
         self.set_message(new_game_content)
 
         # 6. Submit point buttons and point text label: Set all submit_buttons'
-        # state to disabled, submit_button_clicked to FALSE
+        # state to disabled, submit_button_clicked to False
         # and empty all corresponding point text labels.
         self.disable_available_submit_buttons()
         for b in self.__submit_button_clicked:
-            self.__submit_button_clicked[b] = FALSE
+            self.__submit_button_clicked[b] = False
         for spl in self.submit_point_labels.values():
             spl.configure(text="   ")
 
@@ -507,6 +678,24 @@ class Yatzy:
             if val == number:
                 result += number
         return result
+
+    def sum_of_all_dices(self):
+        """
+        Calculate the sum of all dices.
+        :return: int, sum of all dices.
+        """
+        result = 0
+        for val in self.__dice_values:
+            result += val
+        return result
+
+    def update_point(self, round_points):
+        """
+        Calculate the new total point after a round and update the label.
+        :param round_points: the point gained from a round.
+        """
+        self.__total_points += round_points
+        self.__total_points_label.configure(text=self.__total_points)
 
     def set_message(self, new_text):
         """
@@ -545,10 +734,10 @@ class Yatzy:
 
     def enable_available_submit_buttons(self):
         """
-        Enable available submit buttons - whose submit_button_clicked is FALSE.
+        Enable available submit buttons - whose submit_button_clicked is False.
         """
         for sb_name in self.__submit_button_clicked:
-            if self.__submit_button_clicked[sb_name] == FALSE:
+            if self.__submit_button_clicked[sb_name] == False:
                 self.submit_buttons[sb_name].configure(relief=RAISED,
                                                        state=NORMAL)
 
@@ -556,12 +745,12 @@ class Yatzy:
         """
         Check whether the game is over,
         i.e. whether all submit buttons are clicked.
-        :return: bool, TRUE if the game is over.
+        :return: bool, True if the game is over.
         """
         for sb_name in self.__submit_button_clicked:
-            if self.__submit_button_clicked[sb_name] == FALSE:
-                return FALSE
-        return TRUE
+            if self.__submit_button_clicked[sb_name] == False:
+                return False
+        return True
 
     def get_round_message(self, button_name, round_points):
         """
@@ -572,7 +761,7 @@ class Yatzy:
         """
         round_message1 = (f"{button_name} is chosen.\n"
                           f"Your score for this round: {round_points}\n")
-        if self.game_over() == FALSE:
+        if self.game_over() == False:
             round_message2 = "Please roll the dices!"
         else:
             round_message2 = (f"The game is over. Your total points is "
@@ -583,7 +772,7 @@ class Yatzy:
         """
         Set up the buttons and checkboxes for the next round.
         """
-        if self.game_over() == FALSE:
+        if self.game_over() == False:
             # Roll button and number of rolls
             self.__number_of_rolls = 3
             self.__number_of_rolls_label.configure(text=self.__number_of_rolls)
@@ -595,8 +784,9 @@ class Yatzy:
             self.disable_available_submit_buttons()
         # If the game is over
         else:
-            # Disable checkboxes and roll button
+            # Disable checkboxes, roll button and submit buttons
             self.disable_checkboxes()
+            self.disable_available_submit_buttons()
             self.__roll_button.configure(relief=SUNKEN, state=DISABLED)
             # Set number of rolls to 0
             self.__number_of_rolls = 0
@@ -604,7 +794,7 @@ class Yatzy:
 
 
 def main():
-    Yatzy()
+    Yahtzee()
 
 
 if __name__ == "__main__":
